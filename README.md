@@ -1,2 +1,2 @@
 # FlaskTaskManager
-Task Manager Application for using Python Flask
+Task Manager Application using Python Flask
