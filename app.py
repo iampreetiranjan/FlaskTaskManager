@@ -5,14 +5,11 @@ from flask import request
 from flask import redirect
 from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
-from flask_script import Manager
+
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
 db = SQLAlchemy(app)
-migrate = Migrate(app, db)
-manager = Manager(app)
 
 
 class Todo(db.Model):
@@ -26,12 +23,16 @@ class Todo(db.Model):
         return '<Task %r>' % self.id
 
 
+with app.app_context():
+    db.create_all()
+
+
 @app.route('/', methods=['POST', 'GET'])
 def index():
     if request.method == 'POST':
         task_content = request.form['content']
         task_end_date = request.form['enddate']
-        #print(task_content, task_end_date)
+        # print(task_content, task_end_date)
         y, m, d = task_end_date.split('-')
         end_date = datetime(int(y), int(m), int(d))
         new_task = Todo(content=task_content, end_date=end_date)
